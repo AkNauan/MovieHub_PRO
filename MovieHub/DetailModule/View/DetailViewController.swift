@@ -8,13 +8,25 @@
 
 import UIKit
 
+protocol DetailViewDelegate {
+    func favStateChanged(movie: ResultPart)
+}
+
 class DetailViewController: UIViewController {
     
-    var movie = ResultPart(title: "", vote_average: 0.0, overview: "", release_date: "", poster_path: "")
+    var delegate: DetailViewDelegate?
+    
+    var movie = ResultPart(isFavouriteMovie: false, title: "", vote_average: 0.0, id: 0, overview: "", release_date: "", poster_path: "")
+    
+    public var isFavorite = false {
+        didSet {
+            buttonPressed(isFavoriteMoovie: isFavorite)
+        }
+    }
     
     var presenter: DetailViewPresenterProtocol?
     
-    var movieImage: UIImageView = {
+    lazy var movieImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "ЧП")
@@ -27,12 +39,27 @@ class DetailViewController: UIViewController {
     lazy var selectFavoriteButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "!selected"), for: .normal)
-        button.layer.cornerRadius = 30
-        
+        button.setImage(UIImage(named: "like"), for: .normal)
+        button.addTarget(self, action: #selector(changeFavorite), for: .touchUpInside)
         return button
     }()
     
+    
+    @objc private func changeFavorite() {
+        isFavorite.toggle()
+        
+        movie.isFavouriteMovie = isFavorite
+        delegate?.favStateChanged(movie: movie)
+    }
+    
+    func buttonPressed(isFavoriteMoovie: Bool) {
+           
+           if isFavoriteMoovie {
+               selectFavoriteButton.setImage(UIImage(named:"likePressed"), for: .normal)
+           } else {
+               selectFavoriteButton.setImage(UIImage(named:"like"), for: .normal)
+           }
+       }
 
     
     let nameLabel: UILabel = {
@@ -43,7 +70,9 @@ class DetailViewController: UIViewController {
         label.textColor = .black
         label.backgroundColor = .white
         label.layer.cornerRadius = 5
-        label.layer.masksToBounds = true
+        label.layer.borderColor = UIColor.black.cgColor
+        label.layer.borderWidth = 1
+        label.clipsToBounds = true
         label.textAlignment = .center
         label.numberOfLines = 0
         
@@ -53,7 +82,6 @@ class DetailViewController: UIViewController {
     let rateLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "10.0"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textColor = .black
         label.backgroundColor = .white
@@ -65,7 +93,18 @@ class DetailViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = UIColor.white
         view.layer.cornerRadius = 25
-        view.layer.masksToBounds = true
+        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.borderWidth = 1
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let likeView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.white
+        view.layer.cornerRadius = 25
+        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.borderWidth = 1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -74,8 +113,9 @@ class DetailViewController: UIViewController {
         let button = UIButton()
         button.backgroundColor = UIColor.white
         button.layer.cornerRadius = 25
-        button.layer.masksToBounds = true
         button.setImage(UIImage(named: "back"), for: .normal)
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.borderWidth = 1
         button.addTarget(self, action: #selector(backButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -104,16 +144,17 @@ class DetailViewController: UIViewController {
         presenter?.setMovie()
         setupViews()
         
-        view.addSubview(infoLabel)
-        view.addSubview(movieImage)
-        view.addSubview(buttonBack)
         setupConstraints()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+          navigationController?.setNavigationBarHidden(true, animated: true)
+      }
 
     
     func setupViews() {
         nameLabel.text = movie.title
-        rateLabel.text = String(movie.vote_average ?? 0.0)
+        rateLabel.text = String(movie.vote_average ?? 10.0)
         infoLabel.text = movie.overview
         
         DispatchQueue.main.async {
@@ -128,38 +169,52 @@ class DetailViewController: UIViewController {
     }
     
     func setupConstraints() {
+        
+        view.addSubview(infoLabel)
+        view.addSubview(movieImage)
+        view.addSubview(buttonBack)
+        view.addSubview(nameLabel)
+        view.addSubview(likeView)
+        likeView.addSubview(selectFavoriteButton)
+        view.addSubview(rateView)
+        rateView.addSubview(rateLabel)
+        view.addSubview(buttonBack)
+        
+        
         movieImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         movieImage.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
         movieImage.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         movieImage.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1/2).isActive = true
         
-        movieImage.addSubview(nameLabel)
-        movieImage.addSubview(selectFavoriteButton)
-        movieImage.addSubview(rateView)
-        rateView.addSubview(rateLabel)
-        view.addSubview(buttonBack)
+        
+        likeView.centerYAnchor.constraint(equalTo: buttonBack.centerYAnchor).isActive = true
+        likeView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+        likeView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        likeView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        selectFavoriteButton.centerYAnchor.constraint(equalTo: likeView.centerYAnchor).isActive = true
+        selectFavoriteButton.centerXAnchor.constraint(equalTo: likeView.centerXAnchor).isActive = true
+        selectFavoriteButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        selectFavoriteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
         
         nameLabel.leftAnchor.constraint(equalTo: self.movieImage.leftAnchor, constant: 10).isActive = true
         nameLabel.bottomAnchor.constraint(equalTo: self.movieImage.bottomAnchor, constant: -40).isActive = true
         nameLabel.widthAnchor.constraint(equalTo: self.movieImage.widthAnchor, multiplier: 1/2).isActive = true
         
         buttonBack.centerXAnchor.constraint(equalTo: rateView.centerXAnchor).isActive = true
-        buttonBack.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 30).isActive = true 
+        buttonBack.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
         buttonBack.widthAnchor.constraint(equalToConstant: 60).isActive = true
         buttonBack.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        rateView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100).isActive = true
-        rateView.leftAnchor.constraint(equalTo: self.movieImage.leftAnchor, constant: 10).isActive = true
+        rateView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 100).isActive = true
+        rateView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 10).isActive = true
         rateView.widthAnchor.constraint(equalToConstant: 60).isActive = true
         rateView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         rateLabel.centerXAnchor.constraint(equalTo: rateView.centerXAnchor).isActive = true
         rateLabel.centerYAnchor.constraint(equalTo: rateView.centerYAnchor).isActive = true
         
-        selectFavoriteButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100).isActive = true
-        selectFavoriteButton.rightAnchor.constraint(equalTo: self.movieImage.rightAnchor, constant: -10).isActive = true
-        selectFavoriteButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        selectFavoriteButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         infoLabel.topAnchor.constraint(equalTo: self.movieImage.bottomAnchor, constant: 12).isActive = true
         infoLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: +20)

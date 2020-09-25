@@ -36,7 +36,7 @@ class MainPresenter: MainViewPresenterProtocol {
     }
     
     func tapOnTheMovie(movie: ResultPart?) {
-        router?.showDetail(movie: movie)
+        router?.showDetail(movie: movie, delegate: self)
      }
          
     func getMovies() {
@@ -56,4 +56,20 @@ class MainPresenter: MainViewPresenterProtocol {
 
     
     
+}
+
+extension MainPresenter: DetailViewDelegate {
+    func favStateChanged(movie: ResultPart) {
+        
+        print("Movie \"\(movie.title!)\" fav state changed: \(movie.isFavouriteMovie)")
+        
+        guard let count = movies?.results.count else { return }
+        
+        for i in 0..<count {
+            if movie.id == movies?.results[i].id {
+                movies?.results[i] = movie
+            }
+        }
+        
+    }
 }

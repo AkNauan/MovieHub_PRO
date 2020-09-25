@@ -22,6 +22,8 @@
 		007AC27A2518A69C0057F145 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007AC2792518A69C0057F145 /* MovieCollectionViewCell.swift */; };
 		007AC27C2518CCD00057F145 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007AC27B2518CCD00057F145 /* Extensions.swift */; };
 		007AC27E251937F60057F145 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007AC27D251937F60057F145 /* MainViewController.swift */; };
+		00E01BF9251A06D70046BA5D /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E01BF8251A06D70046BA5D /* ContainerViewController.swift */; };
+		00E01BFC251A0A4D0046BA5D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E01BFB251A0A4D0046BA5D /* MenuViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		007AC2792518A69C0057F145 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		007AC27B2518CCD00057F145 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		007AC27D251937F60057F145 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		00E01BF8251A06D70046BA5D /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		00E01BFB251A0A4D0046BA5D /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +103,7 @@
 		00302EC525153BEF002051AC /* MainModule */ = {
 			isa = PBXGroup;
 			children = (
+				00E01BFA251A06DB0046BA5D /* SlideMenu */,
 				00302ED925153E7C002051AC /* Model */,
 				00302ED425153E18002051AC /* View */,
 				00302EDA25153E81002051AC /* Presenter */,
@@ -198,6 +203,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		00E01BFA251A06DB0046BA5D /* SlideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				00E01BF8251A06D70046BA5D /* ContainerViewController.swift */,
+				00E01BFB251A0A4D0046BA5D /* MenuViewController.swift */,
+			);
+			path = SlideMenu;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -271,6 +285,8 @@
 			files = (
 				00302EB125153B2C002051AC /* AppDelegate.swift in Sources */,
 				007AC27A2518A69C0057F145 /* MovieCollectionViewCell.swift in Sources */,
+				00E01BF9251A06D70046BA5D /* ContainerViewController.swift in Sources */,
+				00E01BFC251A0A4D0046BA5D /* MenuViewController.swift in Sources */,
 				00302ED125153DB3002051AC /* AssemblyBuilder.swift in Sources */,
 				00302EDD25153EA2002051AC /* DetailPresenter.swift in Sources */,
 				007AC27E251937F60057F145 /* MainViewController.swift in Sources */,
@@ -425,8 +441,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VNT5M63549;
+				DEVELOPMENT_TEAM = GYMF6NUDH3;
 				INFOPLIST_FILE = MovieHub/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -443,8 +460,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VNT5M63549;
+				DEVELOPMENT_TEAM = GYMF6NUDH3;
 				INFOPLIST_FILE = MovieHub/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

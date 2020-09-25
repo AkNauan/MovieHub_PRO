@@ -18,8 +18,13 @@ class MainViewController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "more"), for: .normal)
+        button.addTarget(self, action: #selector(openMenu), for: .touchUpInside)
         return button
     }()
+    
+    @objc func openMenu() {
+        
+    }
     
     let basketButton: UIButton = {
         let button = UIButton()
@@ -155,9 +160,15 @@ extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.reuseId, for: indexPath) as! MovieCollectionViewCell
         
+        if cells?.results[indexPath.item].isFavouriteMovie == true {
+            cell.likeImageView.image = UIImage(named: "likePressed")
+        } else {
+            cell.likeImageView.image = UIImage(named: "like")
+        }
+        
         cell.nameLabel.text = cells?.results[indexPath.item].title
         cell.smallDescriptionLabel.text = cells?.results[indexPath.item].overview
-        cell.voteAverageLabel.text = String(cells?.results[indexPath.item].vote_average ?? 0.0)
+        cell.voteAverageLabel.text = String(cells?.results[indexPath.item].vote_average ?? 10.0)
         
         if let imageInfo = cells?.results[indexPath.item].poster_path {
             let url = "https://image.tmdb.org/t/p/w500/" + imageInfo

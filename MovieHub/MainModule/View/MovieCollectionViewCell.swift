@@ -36,12 +36,13 @@ class MovieCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    let likeImageView: UIImageView = {
+    var likeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "like")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    
     
     let voteAverageLabel: UILabel = {
         let label = UILabel()

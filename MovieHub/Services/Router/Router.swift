@@ -17,7 +17,7 @@ protocol RouterMain {
 
 protocol RouterProtocol: RouterMain {
    func initialViewController()
-   func showDetail(movie: ResultPart?)
+   func showDetail(movie: ResultPart?, delegate: DetailViewDelegate)
    func popToRoot()
 }
 
@@ -42,9 +42,9 @@ class Router: RouterProtocol {
         }
     }
     
-    func showDetail(movie: ResultPart?) {
+    func showDetail(movie: ResultPart?, delegate: DetailViewDelegate) {
         if let navigationController = navigationController {
-            guard let mainViewController = assemblyBuilder?.createDetailModule(movie: movie, router: self) else {
+            guard let mainViewController = assemblyBuilder?.createDetailModule(movie: movie, router: self, delegate: delegate) else {
                 return
             }
             navigationController.pushViewController(mainViewController, animated: true)

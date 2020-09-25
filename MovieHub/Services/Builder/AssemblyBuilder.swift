@@ -11,7 +11,7 @@ import UIKit
 
 protocol AssemblyBuilderProtocol {
     func createMainModule(router: RouterProtocol) -> UIViewController
-    func createDetailModule(movie: ResultPart?, router: RouterProtocol) -> UIViewController
+    func createDetailModule(movie: ResultPart?, router: RouterProtocol, delegate: DetailViewDelegate) -> UIViewController
 }
 
 class AssemblyBuilder: AssemblyBuilderProtocol {
@@ -24,8 +24,10 @@ class AssemblyBuilder: AssemblyBuilderProtocol {
         return view
     }
     
-    func createDetailModule(movie: ResultPart?, router: RouterProtocol) -> UIViewController {
+    func createDetailModule(movie: ResultPart?, router: RouterProtocol, delegate: DetailViewDelegate) -> UIViewController {
         let view = DetailViewController()
+        view.delegate = delegate
+        
         let presenter = DetailPresenter(view: view, movie: movie!, router: router)
         view.presenter = presenter
         return view
